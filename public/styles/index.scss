@@ -1,0 +1,258 @@
+@charset "UTF-8";
+@import "public/styles/main.scss";
+
+html > body > .content {
+
+	.selected-game {
+		@include animate;
+
+		min-height: 70px;
+
+		position: relative;
+
+		margin-left: auto;
+		margin-right: auto;
+
+		padding: 10px;
+
+		border-left: $border-radius $color-success solid;
+		border-radius: $border-radius;
+
+		background-color: $layer-odd;
+
+		@include media(">=tablet") {
+			width: 750px;
+		}
+
+		.logo-wrapper {
+			position: absolute;
+
+			height: 70px;
+			overflow: hidden;
+
+			border-radius: $border-radius;
+
+			@include media(">=tablet") {
+				top: 50%;
+				left: 10px;
+				transform: translateY(-50%);
+			}
+
+			@include media("<tablet") {
+				top: 10px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+
+			.logo {
+				height: 100%;
+			}
+		}
+
+		.title {
+			padding-bottom: 40px;
+
+			font-size: 2em;
+			font-weight: bolder;
+
+			@include media(">=tablet") {
+				padding-left: 200px;
+			}
+
+			@include media("<tablet") {
+				padding-top: 80px;
+				padding-bottom: 50px;
+			}
+		}
+
+		.actions {
+			right: 10px;
+			bottom: 10px;
+
+			position: absolute;
+
+			.roll, .store, .play {
+				display: inline-block;
+
+				padding: 5px;
+				margin-left: 5px;
+
+				width: 20px;
+				height: 20px;
+
+				text-align: center;
+				vertical-align: middle;
+				border-radius: $border-radius;
+			}
+
+			.roll {
+				cursor: pointer;
+
+				color: $color-running;
+				border: 3px $color-running solid;
+
+				&:hover:not([disabled]) {
+					color: $layer-odd;
+					background-color: $color-running;
+				}
+			}
+
+			.store {
+				color: $color-canceled;
+				border: 3px $color-canceled solid;
+
+				&:hover:not([disabled]) {
+					color: $layer-odd;
+					background-color: $color-canceled;
+				}
+			}
+
+			.play {
+
+				color: $color-success;
+				border: 3px $color-success solid;
+
+				&:hover:not([disabled]) {
+					color: $layer-odd;
+					background-color: $color-success;
+				}
+			}
+		}
+	}
+
+
+	.welcome {
+
+	}
+
+
+	.users {
+		display: flex;
+		flex-wrap: wrap;
+		//text-align: center;
+		align-items: center;
+		justify-content: center;
+
+		.user {
+			@include animate;
+
+			position: relative;
+
+			margin: 10px;
+			padding: 10px;
+
+			border-left: $border-radius $review-color solid;
+			border-radius: $border-radius;
+
+			background-color: $layer-odd;
+
+			&.empty {
+				border-color: $color-default;
+			}
+
+			&.error {
+				border-color: $color-failed;
+			}
+
+			.avatar-wrapper {
+				height: 28px;
+				display: inline-block;
+				overflow: hidden;
+				vertical-align: middle;
+				border-radius: $border-radius;
+
+				.avatar {
+					height: 100%;
+				}
+			}
+
+			.label {
+				line-height: 28px;
+				vertical-align: middle;
+			}
+
+			.input {
+				width: 210px;
+				height: 17px;
+
+				display: inline-block;
+
+				margin: 0 10px;
+				padding: $border-radius;
+
+				border: none;
+				border-radius: $border-radius;
+
+				font-family: $font-default;
+
+				color: $text-color;
+				background-color: $layer-even;
+
+				@include media("<tablet") {
+					margin: 10px 0;
+					width: 80vw;
+				}
+
+				&:focus {
+					outline: 3px $merge-color auto;
+				}
+			}
+
+			.remove {
+				height: 28px;
+				min-width: 28px;
+
+				vertical-align: middle;
+
+				color: $color-failed;
+				background-color: transparent;
+
+				border: 3px $color-failed solid;
+				border-radius: $border-radius;
+
+				@include media("<tablet") {
+					position: absolute;
+					top: 10px;
+					right: 10px;
+				}
+
+				&:hover:not([disabled]) {
+					color: $layer-odd;
+					background-color: $color-failed;
+				}
+
+				.fa {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+				}
+			}
+		}
+
+		.action {
+			width: 48px;
+			height: 48px;
+
+			margin: 10px;
+
+			color: $color-running;
+			background-color: transparent;
+
+			border: 3px $color-running solid;
+			border-radius: $border-radius;
+
+			&:hover:not([disabled]) {
+				color: $layer-even;
+				background-color: $color-running;
+			}
+
+			.icon {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		}
+	}
+}

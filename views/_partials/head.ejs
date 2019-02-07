@@ -1,0 +1,17 @@
+<head>
+	
+	<% include meta.ejs %>
+	
+	<%
+	let titleString = 'What Should We Play On Steam';
+	if (Array.isArray(locals.route)) {
+		locals.route.forEach((value) => {
+			titleString = value.title + ' - ' + titleString;
+		});
+	}
+	%>
+	<title><%= titleString %></title>
+
+	<% include styles.ejs %>
+	
+</head>

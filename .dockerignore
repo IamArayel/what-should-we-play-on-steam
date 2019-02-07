@@ -1,0 +1,14 @@
+/node_modules
+/.idea
+/.gitignore
+/.git
+/.gitlab-ci.yml
+/.stylelintrc
+/.jshintrc
+/docker-compose.yml
+/yarn.lock
+/*.service
+/README.md
+/LICENSE
+/*.iml
+npm-debug.log

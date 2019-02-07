@@ -1,0 +1,4 @@
+<script src="/dist/vue/vue.min.js"></script>
+<% if (locals.scripts && Array.isArray(locals.scripts)) { locals.scripts.forEach((script) => { %>
+<script src="<%- script %>"></script>
+<% }); } %>

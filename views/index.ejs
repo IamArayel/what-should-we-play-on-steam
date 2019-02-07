@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<% locals.styles = [
+    'dist/fontawesome/css/fontawesome.min.css',
+    'dist/fontawesome/css/brands.min.css',
+    'dist/fontawesome/css/solid.min.css',
+    '/styles/index.css'
+]; %>
+<% include _partials/head.ejs %>
+<body>
+<% include _partials/header.ejs %>
+
+<div id="index"
+     class="content">
+    <div class="alerts">
+        <div class="alert warn">
+            Please remember to set your Steam profile and games list to <b>public</b>, or you'll see unexpected results.
+        </div>
+    </div>
+
+    <h4 class="welcome"
+        v-if="!selectedGame">
+        Enter the custom URL or 17-digit community ID for each of the users you want to find games for.
+    </h4>
+
+    <div class="selected-game"
+         v-if="selectedGame">
+        <div class="logo-wrapper">
+            <img class="logo"
+                 :src="getLogoUri(selectedGame)"
+                 :alt="selectedGame.name"/>
+        </div>
+        <div class="title">{{selectedGame.name}}</div>
+        <div class="actions">
+            {{matchingGames}} games
+            <a class="roll"
+               title="Play something else"
+               @click="whatShouldWePlay()"
+               :disabled="loading">
+                <i v-if="!loading"
+                   class="fas fa-dice"></i>
+                <i v-if="loading"
+                   class="fa fa-spinner fa-spin"></i>
+            </a>
+            <a class="store"
+               target="_blank"
+               title="Visit the store page"
+               :href="'//store.steampowered.com/app/' + selectedGame.id">
+                <i class="fas fa-store"></i>
+            </a>
+            <a class="play"
+               title="Launch game"
+               :href="'steam://run/' + selectedGame.id">
+                <i class="fas fa-play"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="users">
+
+        <div class="user"
+             v-for="(user, index) in users"
+             :class="{ error: details[user] && details[user].error, empty: !details[user] }">
+            <div class="avatar-wrapper"
+                 v-if="details[user] && details[user].icon">
+                <img class="avatar"
+                     :src="details[user].icon"
+                     :title="games[user] && games[user].length + ' games'"/>
+            </div>
+            <span class="label fa-2x"
+                  v-if="!(details[user] && details[user].icon)"
+                  :title="details[user] && details[user].error && getErrorMessage(details[user].error)"
+                  :class="details[user] && details[user].error ? 'fas fa-exclamation-triangle text error' : 'fab fa-steam-square'"></span>
+            <input class="input"
+                   v-if="!(details[user] && details[user].name)"
+                   v-model.trim="users[index]"
+                   @input="addUserIfNeeded()"
+                   @blur="getDetails()"
+                   type="text"
+                   placeholder="Steam ID"/>
+            <input class="input"
+                   v-if="details[user] && details[user].name"
+                   v-model="details[user].name"
+                   type="text"
+                   disabled readonly/>
+            <button class="remove"
+                    tabindex="-1"
+                    @click="removeFromUsers(index)"
+                    :disabled="loading">
+                <i class="fas fa-user-slash"></i>
+            </button>
+        </div>
+
+        <button class="action"
+                title="What should we play?"
+                @click="whatShouldWePlay()"
+                :disabled="loading">
+            <span class="icon">
+                <i v-if="!loading"
+                   class="fas fa-2x fa-dice"></i>
+                <i v-if="loading"
+                   class="fa fa-2x fa-spinner fa-spin"></i>
+            </span>
+        </button>
+    </div>
+</div>
+
+<% include _partials/footer.ejs %>
+
+<% locals.scripts = [
+    '/dist/vue/vue.min.js',
+    '/dist/q/q.js',
+    '/dist/axios/axios.min.js',
+    '/scripts/index.js'
+]; %>
+<% include _partials/scripts.ejs %>
+</body>
+</html>

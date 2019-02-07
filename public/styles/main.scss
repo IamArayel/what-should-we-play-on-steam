@@ -1,0 +1,212 @@
+@charset "UTF-8";
+$FontPathOpenSans: "/dist/open-sans";
+//$fa-font-path: "/dist/font-awesome";
+@import "node_modules/open-sans-fonts/open-sans.scss";
+//@import "node_modules/font-awesome/scss/font-awesome.scss";
+@import "node_modules/include-media/dist/include-media";
+
+$border-radius: 6px;
+$layer-even: #30363d;
+$layer-odd: #3c444d;
+$text-color: #eeeeee;
+$text-dark: #444444;
+
+$review-color: #3da5d9;
+$merge-color: #73bfb8;
+
+$color-default: #828282;
+$color-success: #1aaa55;
+$color-failed: #db3b21;
+$color-warning: #fc9403;
+$color-manual: #9b51e0;
+$color-running: #2e87e0;
+$color-canceled: #f2c94c;
+$color-skipped: #bdbdbd;
+
+$font-default: "Open Sans", sans-serif;
+$font-bold: "Open Sans ExtraBold", sans-serif;
+$font-condensed: "Open Sans Condensed", sans-serif;
+
+@mixin ellipsis {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: clip;
+}
+
+@mixin animate {
+	transition: all linear 0.1s;
+}
+
+html {
+	color: $text-color;
+	position: relative;
+	min-height: 100%;
+	font-family: $font-default;
+	background-color: $layer-even;
+
+	body {
+		margin: 100px 0;
+
+		a {
+			@include animate;
+			text-decoration: none;
+			color: $color-running;
+			position: relative;
+
+			&:hover {
+				color: darken($color-running, 10)
+			}
+
+			&[disabled] {
+				cursor: not-allowed;
+			}
+		}
+
+		button {
+			@include animate;
+			border: none;
+			cursor: pointer;
+			position: relative;
+
+			&:focus {
+				outline: none;
+			}
+
+			&[disabled] {
+				cursor: not-allowed;
+			}
+		}
+
+		nav {
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 60px;
+			position: absolute;
+
+			padding: 10px 50px;
+
+			background-color: $layer-odd;
+
+			@include media("<tablet") {
+				padding: 10px;
+			}
+
+			.nav-bar {
+				@include ellipsis;
+
+				width: 100%;
+				height: 100%;
+				position: relative;
+
+				.brand {
+					color: $text-color;
+					font-size: 36px;
+					max-width: 100%;
+					line-height: 60px;
+					vertical-align: top;
+					text-decoration: none;
+
+					@include media("<tablet") {
+						font-size: 18px;
+					}
+
+					.brand-img {
+						height: 60px;
+
+						@include media(">=tablet") {
+							margin-right: 25px;
+						}
+					}
+				}
+			}
+		}
+
+		.text {
+			&.warn {
+				color: $color-warning;
+			}
+
+			&.error {
+				color: $color-failed;
+			}
+
+			&.condensed {
+				font-family: $font-condensed;
+			}
+		}
+
+		.alerts {
+			margin: 20px 5px;
+
+			.alert {
+				margin: 10px 0;
+				padding: 10px;
+				text-align: center;
+				border-radius: $border-radius;
+
+				&.warn {
+					color: $text-dark;
+					background-color: $color-warning;
+
+					&:before {
+						content: 'Warning!';
+						float: left;
+						font-weight: bold;
+						font-family: $font-condensed;
+					}
+				}
+
+				&.error {
+					background-color: $color-failed;
+
+					&:before {
+						content: 'Error!';
+						float: left;
+						font-weight: bold;
+						font-family: $font-condensed;
+					}
+				}
+			}
+		}
+
+		.content {
+			margin: auto;
+			padding: 0 20px;
+		}
+
+		footer {
+			left: 0;
+			right: 0;
+			color: $color-skipped;
+			height: 40px;
+			bottom: 0;
+			display: flex;
+			padding: 10px 30px;
+			position: absolute;
+			flex-wrap: wrap;
+			background-color: $layer-odd;
+
+			.foot {
+				max-width: 100%;
+				flex-grow: 1;
+				flex-basis: 0;
+				line-height: 40px;
+			}
+
+			.left {
+				float: left;
+				text-align: start;
+			}
+
+			.center {
+				text-align: center;
+			}
+
+			.right {
+				float: right;
+				text-align: end;
+			}
+		}
+	}
+}

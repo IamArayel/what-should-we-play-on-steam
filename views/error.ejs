@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<%
+locals.route = [{ title: 'Error', location: '' }];
+locals.styles = ['/styles/main.css'];
+%>
+<% include _partials/head.ejs %>
+<body class="error-page">
+<% include _partials/header.ejs %>
+
+<div class="content">
+    <%
+    if (error && error.status) {
+            switch (error.status) {
+    case 404: %>
+    <h1 class="text error condensed">404</h1>
+    <h2>The page you're looking for doesn't exist.</h2>
+    <% break;
+    default: %>
+    <h1 class="text error condensed">An error occurred.</h1>
+    <br/>
+    <dl>
+        <dt>Message:</dt>
+        <dd><%= message %></dd>
+    </dl>
+    <dl>
+        <dt>Status:</dt>
+        <dd><%= error.status %></dd>
+    </dl>
+    <dl>
+        <dt>Stack:</dt>
+        <dd>
+            <% if (error.stack) { %>
+                <pre><%= error.stack %></pre>
+            <% } else { %>
+                <span class="text error">N/A</span>
+            <% } %>
+        </dd>
+    </dl>
+    <% break; } } else { %>
+        <h1 class="text error condensed">An unexpected error occurred.</h1>
+        <br/>
+        <dl>
+            <dt>Message:</dt>
+            <dd><%= message %></dd>
+        </dl>
+    <% } %>
+</div>
+<% include _partials/footer.ejs %>
+<% include _partials/scripts.ejs %>
+</body>
+</html>
