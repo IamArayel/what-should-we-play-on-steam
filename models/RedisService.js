@@ -2,9 +2,12 @@ const redis = require('redis-promisify');
 
 class RedisService {
 
-	constructor(clientParams = null) {
+	constructor() {
 		this._keyBase = 'wswpos';
-		this._client = redis.createClient(clientParams);
+		this._client = redis.createClient({
+			host: process.env.x_redis_host,
+			port: process.env.x_redis_port
+		});
 		this._expire = process.env.x_redis_expire;
 	}
 
