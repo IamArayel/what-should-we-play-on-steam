@@ -23,7 +23,7 @@ global.redisMiddleware = redisMiddleware({
 	prefix: 'wswpos.express',
 	host: process.env.x_redis_host,
 	port: process.env.x_redis_port,
-	expire: process.env.x_redis_expire || 900
+	expire: process.env.x_redis_expire ? parseInt(process.env.x_redis_expire) : 900
 });
 
 

@@ -8,7 +8,7 @@ class RedisService {
 			host: process.env.x_redis_host,
 			port: process.env.x_redis_port
 		});
-		this._expire = process.env.x_redis_expire;
+		this._expire = process.env.x_redis_expire ? parseInt(process.env.x_redis_expire) : 900;
 	}
 
 	/**
