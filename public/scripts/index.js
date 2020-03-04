@@ -30,7 +30,7 @@ new Vue({
 			return errorObj.status + ' - ' + errorObj.error;
 		},
 		getLogoUri: function (gameObj) {
-			return `//media.steampowered.com/steamcommunity/public/images/apps/${gameObj.id}/${gameObj.logoUri}.jpg`;
+			return `//steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/${gameObj.id}/${gameObj.logoUri}.jpg`;
 		},
 		getDetails: function () {
 			if (this.loading) {
