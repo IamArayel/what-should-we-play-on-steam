@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:13
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -18,5 +18,5 @@ RUN npm install
 # Open port for server
 EXPOSE 3000
 
-# Set start command for server, through workaround
+# Set start command for server
 CMD [ "node", "server.js" ]
