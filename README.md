@@ -1,7 +1,4 @@
-[![pipeline status](https://gitlab.archbox.xyz/kiririn/site/badges/master/pipeline.svg)](https://gitlab.archbox.xyz/kiririn/site/commits/master)
-[![coverage report](https://gitlab.archbox.xyz/kiririn/site/badges/master/coverage.svg)](https://gitlab.archbox.xyz/kiririn/site/commits/master)
+# What Should We Play On Steam
+This is automatically build using GitLab CI and pushed to the projects [Container Registry](https://gitlab.com/Timmy1e/what-should-we-play-on-steam/container_registry).
 
-# Kiririn.xyz website
-This is the [Kiririn.xyz website](https://kiririn.xyz) NodeJS Docker project.
-
-This is automatically build using the GitLab CI and pushed to the [Docker Hub repo](https://hub.docker.com/r/archbox/kiririn/).
+Check out the [production branch](https://gitlab.com/Timmy1e/what-should-we-play-on-steam/-/tree/production) to see an example of how to deploy this application.
