@@ -98,23 +98,23 @@ html {
 				position: relative;
 
 				.brand {
-					color: $text-color;
+					@include ellipsis();
+
+					display: inline-block;
 					font-size: 36px;
 					max-width: 100%;
 					line-height: 60px;
-					vertical-align: top;
-					text-decoration: none;
 
 					@include media("<tablet") {
 						font-size: 18px;
 					}
+				}
 
-					.brand-img {
-						height: 60px;
+				.brand-img {
+					height: 60px;
 
-						@include media(">=tablet") {
-							margin-right: 25px;
-						}
+					@include media(">=tablet") {
+						margin-right: 25px;
 					}
 				}
 			}
