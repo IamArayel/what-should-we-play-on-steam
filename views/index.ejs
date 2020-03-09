@@ -27,8 +27,8 @@
          v-if="selectedGame">
         <div class="logo-wrapper">
             <img class="logo"
-                 :src="getLogoUri(selectedGame)"
-                 :alt="selectedGame.name"/>
+                 alt=""
+                 :src="getLogoUri(selectedGame)"/>
         </div>
         <div class="title">{{selectedGame.name}}</div>
         <div class="actions">
@@ -64,6 +64,7 @@
             <div class="avatar-wrapper"
                  v-if="details[user] && details[user].icon">
                 <img class="avatar"
+                     alt=""
                      :src="details[user].icon"
                      :title="games[user] && games[user].length + ' games'"/>
             </div>
