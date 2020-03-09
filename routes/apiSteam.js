@@ -1,5 +1,4 @@
-const q = require('q');
-const SteamApiService = require('../models/SteamApiService');
+const SteamService = require('../models/SteamService');
 const express = require('express');
 const router = express.Router();
 
@@ -7,24 +6,24 @@ const router = express.Router();
 router.get('/details/:names', (req, res, next) => {
 	const names = req.params.names;
 
-	const steamApi = new SteamApiService();
+	const steamService = new SteamService();
 
-	steamApi.getUsersDetails(names.split(','))
+	steamService.getUsersDetailsByNames(names.split(','))
 		.then(result => res.json(result))
 		.catch(reason => res.status(500).json(reason))
-		.finally(() => steamApi.destroy());
+		.finally(() => steamService.destroy());
 });
 
 
 router.get('/games/:id', (req, res, next) => {
 	const id = req.params.id;
 
-	const steamApi = new SteamApiService();
+	const steamService = new SteamService();
 
-	steamApi.getGames(id)
+	steamService.getGamesByUserId(id)
 		.then(result => res.json(result))
 		.catch(reason => res.status(500).json(reason))
-		.finally(() => steamApi.destroy());
+		.finally(() => steamService.destroy());
 });
 
 
