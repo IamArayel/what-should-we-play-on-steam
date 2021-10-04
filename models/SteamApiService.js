@@ -6,7 +6,7 @@ class SteamApiService {
 	 */
 	constructor() {
 		this._baseUri = 'https://api.steampowered.com';
-		this._steamKey = process.env.x_steam_key;
+		this._steamKey = process.env.STEAM_KEY;
 	}
 
 	/**
