@@ -12,10 +12,10 @@ class RedisService {
 		this._keyDetails = 'details';
 
 		this._client = redis.createClient({
-			host: process.env.x_redis_host,
-			port: process.env.x_redis_port
+			host: global.getEnv('REDIS_SERVICE_HOST'),
+			port: global.getEnv('REDIS_SERVICE_PORT')
 		});
-		this._expire = process.env.x_redis_expire ? parseInt(process.env.x_redis_expire) : 900;
+		this._expire = global.getEnv('REDIS_EXPIRE') ? parseInt(global.getEnv('REDIS_EXPIRE')) : 900;
 	}
 
 	/**

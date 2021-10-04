@@ -18,11 +18,7 @@ const babelMiddleware = require('express-babel').default;
 const app = express();
 
 /// Get env var
-global.getEnv = (name) => {
-	const env = process.env[name]
-	console.log('ENV:', name, '=', env);
-	return env;
-};
+global.getEnv = (name) => process.env[name];
 
 /// Redis cache
 global.redisMiddleware = redisMiddleware({
