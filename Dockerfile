@@ -11,10 +11,6 @@ COPY . /usr/src/app/
 
 # Set Environment for producrtion
 ENV NODE_ENV=production
-ENV PORT=3000
-ENV REDIS_SERVICE_HOST=localhost
-ENV REDIS_SERVICE_PORT=6379
-ENV REDIS_EXPIRE=900
 
 # Install all deps
 RUN npm install
