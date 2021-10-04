@@ -21,9 +21,9 @@ const app = express();
 /// Redis cache
 global.redisMiddleware = redisMiddleware({
 	prefix: 'wswpos.express',
-	host: process.env.x_redis_host,
-	port: process.env.x_redis_port,
-	expire: process.env.x_redis_expire ? parseInt(process.env.x_redis_expire) : 900
+	host: process.env.REDIS_SERVICE_HOST,
+	port: process.env.REDIS_SERVICE_PORT,
+	expire: process.env.REDIS_EXPIRE ? parseInt(process.env.REDIS_EXPIRE) : 900
 });
 
 
