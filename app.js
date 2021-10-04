@@ -17,13 +17,15 @@ const babelMiddleware = require('express-babel').default;
 /// Express
 const app = express();
 
+/// Get env var
+global.getEnv = (name) => process.env[name];
 
 /// Redis cache
 global.redisMiddleware = redisMiddleware({
 	prefix: 'wswpos.express',
-	host: process.env.REDIS_SERVICE_HOST,
-	port: process.env.REDIS_SERVICE_PORT,
-	expire: process.env.REDIS_EXPIRE ? parseInt(process.env.REDIS_EXPIRE) : 900
+	host: global.getEnv('REDIS_SERVICE_HOST'),
+	port: global.getEnv('REDIS_SERVICE_PORT'),
+	expire: global.getEnv('REDIS_EXPIRE') ? parseInt(global.getEnv('REDIS_EXPIRE')) : 900
 });
 
 
@@ -36,7 +38,7 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'images', 'logo.png')));
 app.use(logger(global.PROD ? 'tiny' : 'dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(sassMiddleware({
 	src: path.join(__dirname, 'public'),
 	dest: path.join(__dirname, 'public'),
