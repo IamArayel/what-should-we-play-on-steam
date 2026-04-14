@@ -178,9 +178,7 @@ class SteamService {
 
 				const userGames = result.response.games.map(game => ({
 					id: game.appid,
-					name: game.name,
-					iconUri: game.img_icon_url,
-					logoUri: game.img_logo_url
+					name: game.name
 				}));
 
 				defer.resolve(userGames);
@@ -208,6 +206,4 @@ module.exports = SteamService;
  * @typedef Game
  * @property {number} id
  * @property {string} name
- * @property {string} iconUri
- * @property {string} logoUri
  */

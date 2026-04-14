@@ -57,9 +57,7 @@ class SteamApiService {
 	 *   response: {
 	 *     games: {
 	 *       appid: number,
-	 *       name: string,
-	 *       img_icon_url: string,
-	 *       img_logo_url: string
+	 *       name: string
 	 *     }[]
 	 *   }
 	 * }>}
