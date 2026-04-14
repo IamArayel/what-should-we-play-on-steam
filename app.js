@@ -67,6 +67,23 @@ function addStaticDep(depName, depPath = depName) {
 }
 
 
+/// Content Security Policy
+app.use((req, res, next) => {
+	res.setHeader('Content-Security-Policy', [
+		"default-src 'none'",
+		"script-src 'self' 'unsafe-eval'",
+		"style-src 'self'",
+		"img-src 'self' https://steamcdn-a.akamaihd.net https://*.steamstatic.com",
+		"font-src 'self'",
+		"connect-src 'self'",
+		"base-uri 'self'",
+		"form-action 'self'",
+		"frame-ancestors 'none'"
+	].join('; '));
+	next();
+});
+
+
 /// Robots
 app.get('/robots.txt', global.redisMiddleware.route(), (req, res) => {
 	res.type('text/plain');
