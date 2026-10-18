@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"private": true,
 	"main": "server.js",
-	"repository": "https://gitlab.com/Timmy1e/what-should-we-play-on-steam",
+	"repository": "https://github.com/IamArayel/what-should-we-play-on-steam",
 	"author": "Tim van Leuverden <TvanLeuverden@Gmail.com>",
 	"license": "GPLv3",
 	"dependencies": {

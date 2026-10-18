@@ -1,9 +1,9 @@
-# [What Should We Play On Steam](https://whatshouldweplayonsteam.com/)
-I had the issue that when a group of friends wanted to play a game together, but no-one could think of a game to play.
-So we would start comparing games in our libraries, which is a slow and fun ruining task.
-So I thought that it would be a fun project to build, and explore the [Steam APIs](https://developer.valvesoftware.com/wiki/).
+# What Should We Play On Steam
+
+Fork de [Timmy1e/what-should-we-play-on-steam](https://gitlab.com/Timmy1e/what-should-we-play-on-steam).
+
+Trouver un jeu auquel jouer entre amis est souvent laborieux : chacun compare sa bibliothèque à celle des autres, à la main. Cette application compare les bibliothèques Steam de plusieurs joueurs pour faire ressortir les jeux qu'ils ont en commun, via les [Steam APIs](https://developer.valvesoftware.com/wiki/).
 
 ## CI/CD
-This is automatically build using GitLab CI and pushed to the projects [Container Registry](https://gitlab.com/Timmy1e/what-should-we-play-on-steam/container_registry).
 
-Check out the [production branch](https://gitlab.com/Timmy1e/what-should-we-play-on-steam/-/tree/production) to see an example of how to deploy this application.
+L'image Docker est construite automatiquement par GitHub Actions et publiée sur le [Container Registry](https://github.com/IamArayel/what-should-we-play-on-steam/pkgs/container/what-should-we-play-on-steam) du projet.
