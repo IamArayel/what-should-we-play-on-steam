@@ -125,7 +125,7 @@ class SteamService {
 				}
 
 				if (!result || !result.response || !Array.isArray(result.response.players)) {
-					defer.reject({ error: 'No players', status: 500 })
+					return defer.reject({ error: 'No players', status: 500 });
 				}
 
 				result.response.players.forEach(player => {
@@ -143,7 +143,8 @@ class SteamService {
 				});
 
 				defer.resolve(userResult);
-			});
+			})
+			.catch(reason => defer.reject(reason));
 
 		return defer.promise;
 	}
