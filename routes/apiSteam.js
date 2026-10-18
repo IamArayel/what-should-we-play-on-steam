@@ -27,4 +27,20 @@ router.get('/games/:id', (req, res, next) => {
 });
 
 
+router.get('/friends/:id', (req, res, next) => {
+	const id = req.params.id;
+
+	if (!/^\d{17}$/.test(id)) {
+		return res.status(400).json({ status: 400, error: 'Invalid Steam user ID' });
+	}
+
+	const steamService = new SteamService();
+
+	steamService.getFriendsByUserId(id)
+		.then(result => res.json(result))
+		.catch(reason => res.status(reason.status || 500).json(reason))
+		.finally(() => steamService.destroy());
+});
+
+
 module.exports = router;

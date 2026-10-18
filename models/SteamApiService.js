@@ -73,11 +73,23 @@ class SteamApiService {
 	 * }>}
 	 */
 	getGamesByUserId(id) {
-		return request({
-			method: 'GET',
-			uri: `${this._baseUri}/IPlayerService/GetOwnedGames/v0001/?key=${this._steamKey}&steamId=${id}&format=json&include_appinfo=1&include_played_free_games=1`,
-			json: true
-		});
+		return this.get(`${this._baseUri}/IPlayerService/GetOwnedGames/v0001/?key=${this._steamKey}&steamId=${id}&format=json&include_appinfo=1&include_played_free_games=1`);
+	}
+
+	/**
+	 * Get Steam friends list for Steam user ID
+	 * Rejects with status 401 when the friends list is private
+	 * @param {string} id - Steam user ID
+	 * @returns {Promise<{
+	 *   friendslist: {
+	 *     friends: {
+	 *       steamid: string
+	 *     }[]
+	 *   }
+	 * }>}
+	 */
+	getFriendsByUserId(id) {
+		return this.get(`${this._baseUri}/ISteamUser/GetFriendList/v0001/?key=${this._steamKey}&steamid=${encodeURIComponent(id)}&relationship=friend`);
 	}
 }
 
