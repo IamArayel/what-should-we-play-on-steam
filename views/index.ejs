@@ -133,9 +133,10 @@
     </div>
 
     <div class="alerts"
-         v-if="getUnavailableFriendsMessage()">
-        <div class="alert warn">
-            {{getUnavailableFriendsMessage()}}
+         v-if="getFriendsWarnings().length > 0">
+        <div class="alert warn"
+             v-for="warning in getFriendsWarnings()">
+            {{warning}}
         </div>
     </div>
 

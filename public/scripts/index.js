@@ -90,7 +90,8 @@ new Vue({
 		groupName: '',
 		groupError: null,
 		friends: {},
-		unavailableFriendLists: [],
+		privateFriendLists: [],
+		failedFriendLists: [],
 		suggestionIndex: null,
 		suggestions: [],
 		highlightedSuggestion: -1
@@ -127,17 +128,26 @@ new Vue({
 				.filter(user => this.details[user] && this.details[user].id)
 				.map(user => this.details[user].id);
 		},
-		getUnavailableFriendsMessage: function () {
-			const names = this.users
-				.filter(user => this.details[user] && this.unavailableFriendLists.indexOf(this.details[user].id) !== -1)
+		getEnteredNamesIn: function (ids) {
+			return this.users
+				.filter(user => this.details[user] && ids.indexOf(this.details[user].id) !== -1)
 				.map(user => this.details[user].name);
+		},
+		getFriendsWarnings: function () {
+			const warnings = [];
+			const privateNames = this.getEnteredNamesIn(this.privateFriendLists);
+			const failedNames = this.getEnteredNamesIn(this.failedFriendLists);
 
-			return names.length > 0
-				? `Friends lists of ${names.join(', ')} are private or unavailable: their friends won't be suggested.`
-				: null;
+			if (privateNames.length > 0) {
+				warnings.push(`Friends lists of ${privateNames.join(', ')} are private: their friends won't be suggested.`);
+			}
+			if (failedNames.length > 0) {
+				warnings.push(`Friends of ${failedNames.join(', ')} could not be loaded: their friends won't be suggested.`);
+			}
+			return warnings;
 		},
 		loadFriends: function (id) {
-			if (this.friends[id] || this.unavailableFriendLists.indexOf(id) !== -1) {
+			if (this.friends[id] || this.privateFriendLists.indexOf(id) !== -1 || this.failedFriendLists.indexOf(id) !== -1) {
 				return;
 			}
 
@@ -146,10 +156,11 @@ new Vue({
 					this.friends = Object.assign({}, this.friends, { [id]: result.data });
 				})
 				.catch(error => {
-					if (!error.response || error.response.status !== 403) {
-						console.error(error);
+					if (error.response && error.response.status === 403) {
+						return this.privateFriendLists.push(id);
 					}
-					this.unavailableFriendLists.push(id);
+					console.error(error);
+					this.failedFriendLists.push(id);
 				});
 		},
 		onUserInput: function (index) {
