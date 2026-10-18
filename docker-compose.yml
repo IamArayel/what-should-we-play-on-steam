@@ -1,0 +1,21 @@
+# Environnement de développement local : code monté dans le conteneur, voir README.
+services:
+  app:
+    build: .
+    init: true
+    ports:
+      - "3000:3000"
+    environment:
+      STEAM_KEY: ${STEAM_KEY:?STEAM_KEY manquante, la définir dans le fichier .env}
+      REDIS_SERVICE_HOST: redis
+      REDIS_SERVICE_PORT: 6379
+      NODE_ENV: development
+    volumes:
+      - .:/usr/src/app
+      # Conserve les node_modules de l'image, sinon masqués par le montage du code
+      - /usr/src/app/node_modules
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
