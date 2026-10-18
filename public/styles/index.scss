@@ -255,4 +255,102 @@ html > body > .content {
 			}
 		}
 	}
+
+
+	.groups {
+		margin: 30px auto 0;
+		padding: 10px;
+
+		border-radius: $border-radius;
+		background-color: $layer-odd;
+
+		@include media(">=tablet") {
+			width: 750px;
+		}
+
+		.input {
+			width: 210px;
+
+			margin: 0 10px;
+			padding: $border-radius;
+
+			border: none;
+			border-radius: $border-radius;
+
+			font-family: $font-default;
+
+			color: $text-color;
+			background-color: $layer-even;
+
+			&:focus {
+				outline: 3px $merge-color auto;
+			}
+		}
+
+		.save, .load, .delete {
+			min-height: 28px;
+			min-width: 28px;
+
+			font-family: $font-default;
+			background-color: transparent;
+
+			border-radius: $border-radius;
+
+			&:focus-visible {
+				outline: 3px $merge-color auto;
+			}
+		}
+
+		.save, .load {
+			color: $color-success;
+			border: 3px $color-success solid;
+
+			&:hover:not([disabled]) {
+				color: $layer-odd;
+				background-color: $color-success;
+			}
+		}
+
+		.delete {
+			margin-left: 5px;
+
+			color: $color-failed;
+			border: 3px $color-failed solid;
+
+			&:hover:not([disabled]) {
+				color: $layer-odd;
+				background-color: $color-failed;
+			}
+		}
+
+		.group-list {
+			margin: 15px 0 0;
+			padding: 0;
+
+			list-style: none;
+
+			.group {
+				display: flex;
+				align-items: center;
+
+				padding: 5px 0;
+
+				.name {
+					@include ellipsis;
+
+					flex-grow: 1;
+					font-weight: bold;
+				}
+
+				.count {
+					margin: 0 10px;
+					color: $color-skipped;
+				}
+			}
+		}
+
+		.empty {
+			color: $color-skipped;
+		}
+	}
 }

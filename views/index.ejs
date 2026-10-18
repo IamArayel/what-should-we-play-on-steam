@@ -104,6 +104,62 @@
             </span>
         </button>
     </div>
+
+    <section class="groups"
+             aria-labelledby="groups-title">
+        <h4 id="groups-title">Groups</h4>
+
+        <div class="alerts"
+             v-if="groupError">
+            <div class="alert error"
+                 role="alert">
+                {{groupError}}
+            </div>
+        </div>
+
+        <form class="group-save"
+              @submit.prevent="saveGroup()">
+            <label for="group-name">Group name</label>
+            <input id="group-name"
+                   class="input"
+                   v-model.trim="groupName"
+                   type="text"
+                   maxlength="50"/>
+            <button class="save"
+                    type="submit"
+                    :disabled="!canSaveGroup">
+                Save
+            </button>
+        </form>
+
+        <ul class="group-list"
+            v-if="groups.length > 0">
+            <li class="group"
+                v-for="group in groups"
+                :key="group.name">
+                <span class="name">{{group.name}}</span>
+                <span class="count">{{group.members.length}} players</span>
+                <button class="load"
+                        type="button"
+                        @click="loadGroup(group.name)"
+                        :disabled="loading">
+                    Load
+                </button>
+                <button class="delete"
+                        type="button"
+                        :aria-label="'Delete group ' + group.name"
+                        :title="'Delete group ' + group.name"
+                        @click="deleteGroup(group.name)">
+                    <i class="fas fa-trash"
+                       aria-hidden="true"></i>
+                </button>
+            </li>
+        </ul>
+        <p class="empty"
+           v-else>
+            No saved groups yet. Enter some players, name the group and save it.
+        </p>
+    </section>
 </div>
 
 <% include _partials/footer.ejs %>

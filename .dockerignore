@@ -6,6 +6,7 @@
 /.stylelintrc
 /.jshintrc
 /docker-compose.yml
+/.env
 /yarn.lock
 /*.service
 /README.md
