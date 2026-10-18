@@ -12,7 +12,7 @@
 		"babel-plugin-transform-strict-mode": "6.24.1",
 		"babel-preset-env": "1.7.0",
 		"babel-preset-minify": "0.5.1",
-		"body-parser": "1.18.3",
+		"body-parser": "1.20.6",
 		"ejs": "2.6.2",
 		"express": "4.16.4",
 		"express-babel": "1.0.2",
