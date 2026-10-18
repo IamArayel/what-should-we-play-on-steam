@@ -10,6 +10,24 @@ class SteamApiService {
 	}
 
 	/**
+	 * Call the Steam API
+	 * Errors are reduced to a status and a message: the raw error holds the request URI, API key included
+	 * @private
+	 * @param {string} uri
+	 * @returns {Promise<Object>}
+	 */
+	get(uri) {
+		return request({
+			method: 'GET',
+			uri: uri,
+			json: true
+		})
+			.catch(error => {
+				throw { status: error.statusCode || 500, error: 'Steam API request failed' };
+			});
+	}
+
+	/**
 	 * Get Steam user ID for Steam vanity name
 	 * @param {string} name - Steam vanity name
 	 * @returns {Promise<{
@@ -19,16 +37,12 @@ class SteamApiService {
 	 * }>}
 	 */
 	getUserIdForName(name) {
-		return request({
-			method: 'GET',
-			uri: `${this._baseUri}/ISteamUser/ResolveVanityURL/v0001/?key=${this._steamKey}&vanityUrl=${encodeURIComponent(name)}`,
-			json: true
-		});
+		return this.get(`${this._baseUri}/ISteamUser/ResolveVanityURL/v0001/?key=${this._steamKey}&vanityUrl=${encodeURIComponent(name)}`);
 	}
 
 	/**
 	 * Get Steam user details for array of Steam user ID's
-	 * @param {number[]} ids - Array of Steam user ID's
+	 * @param {number[]} ids - Array of Steam user ID's, 100 at most
 	 * @returns {Promise<{
 	 *   response: {
 	 *     players: {
@@ -42,11 +56,7 @@ class SteamApiService {
 	 * }>}
 	 */
 	getUsersDetailsByUserIds(ids) {
-		return request({
-			method: 'GET',
-			uri: `${this._baseUri}/ISteamUser/GetPlayerSummaries/v0002/?key=${this._steamKey}&steamids=${ids.join(',')}`,
-			json: true
-		});
+		return this.get(`${this._baseUri}/ISteamUser/GetPlayerSummaries/v0002/?key=${this._steamKey}&steamids=${ids.join(',')}`);
 	}
 
 
