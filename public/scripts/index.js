@@ -42,6 +42,40 @@ function writeGroups(groups) {
 	window.localStorage.setItem(GROUPS_STORAGE_KEY, JSON.stringify(groups));
 }
 
+const SUGGESTION_DELAY_MS = 300;
+const MAX_SUGGESTIONS = 8;
+const MIN_SUGGESTION_QUERY_LENGTH = 2;
+let suggestionTimer = null;
+
+/**
+ * Rank the friends of the entered players whose name contains the query
+ * Friends shared by more entered players come first
+ * @param {Object[][]} friendLists - One friends list per entered player
+ * @param {string[]} excludedIds - Steam user IDs already entered
+ * @param {string} query
+ * @returns {Object[]}
+ */
+function rankFriendSuggestions(friendLists, excludedIds, query) {
+	const needle = query.toLowerCase();
+	const matches = {};
+
+	friendLists.forEach(friends => friends.forEach(friend => {
+		if (excludedIds.indexOf(friend.id) !== -1 || !friend.name || friend.name.toLowerCase().indexOf(needle) === -1) {
+			return;
+		}
+		if (!matches[friend.id]) {
+			matches[friend.id] = { friend: friend, mutualCount: 0 };
+		}
+		matches[friend.id].mutualCount++;
+	}));
+
+	return Object.keys(matches)
+		.map(id => matches[id])
+		.sort((a, b) => b.mutualCount - a.mutualCount || a.friend.name.localeCompare(b.friend.name))
+		.slice(0, MAX_SUGGESTIONS)
+		.map(match => match.friend);
+}
+
 new Vue({
 	el: '#index',
 	data: {
@@ -54,7 +88,13 @@ new Vue({
 		matchingGames: 0,
 		groups: [],
 		groupName: '',
-		groupError: null
+		groupError: null,
+		friends: {},
+		privateFriendLists: [],
+		failedFriendLists: [],
+		suggestionIndex: null,
+		suggestions: [],
+		highlightedSuggestion: -1
 	},
 	computed: {
 		canSaveGroup: function () {
@@ -77,9 +117,112 @@ new Vue({
 			}
 		},
 		removeFromUsers: function (index) {
+			this.closeSuggestions();
 			this.users.splice(index, 1);
 			this.resetGameSelection();
 			this.addUserIfNeeded();
+		},
+		// Methods rather than computed: details gets keys added without Vue reactivity
+		getEnteredIds: function () {
+			return this.users
+				.filter(user => this.details[user] && this.details[user].id)
+				.map(user => this.details[user].id);
+		},
+		getEnteredNamesIn: function (ids) {
+			return this.users
+				.filter(user => this.details[user] && ids.indexOf(this.details[user].id) !== -1)
+				.map(user => this.details[user].name);
+		},
+		getFriendsWarnings: function () {
+			const warnings = [];
+			const privateNames = this.getEnteredNamesIn(this.privateFriendLists);
+			const failedNames = this.getEnteredNamesIn(this.failedFriendLists);
+
+			if (privateNames.length > 0) {
+				warnings.push(`Friends lists of ${privateNames.join(', ')} are private: their friends won't be suggested.`);
+			}
+			if (failedNames.length > 0) {
+				warnings.push(`Friends of ${failedNames.join(', ')} could not be loaded: their friends won't be suggested.`);
+			}
+			return warnings;
+		},
+		loadFriends: function (id) {
+			if (this.friends[id] || this.privateFriendLists.indexOf(id) !== -1 || this.failedFriendLists.indexOf(id) !== -1) {
+				return;
+			}
+
+			axios.get(`/api/steam/friends/${id}`)
+				.then(result => {
+					this.friends = Object.assign({}, this.friends, { [id]: result.data });
+				})
+				.catch(error => {
+					if (error.response && error.response.status === 403) {
+						return this.privateFriendLists.push(id);
+					}
+					console.error(error);
+					this.failedFriendLists.push(id);
+				});
+		},
+		onUserInput: function (index) {
+			this.addUserIfNeeded();
+			this.closeSuggestions();
+
+			const query = this.users[index];
+			if (query.length < MIN_SUGGESTION_QUERY_LENGTH) {
+				return;
+			}
+
+			suggestionTimer = setTimeout(() => {
+				const enteredIds = this.getEnteredIds();
+				const friendLists = enteredIds
+					.map(id => this.friends[id])
+					.filter(friends => friends);
+
+				this.suggestionIndex = index;
+				this.suggestions = rankFriendSuggestions(friendLists, enteredIds, query);
+			}, SUGGESTION_DELAY_MS);
+		},
+		onUserKeydown: function (event, index) {
+			const count = this.suggestions.length;
+			if (this.suggestionIndex !== index || count < 1) {
+				return;
+			}
+
+			switch (event.key) {
+				case 'ArrowDown':
+					event.preventDefault();
+					this.highlightedSuggestion = (this.highlightedSuggestion + 1) % count;
+					break;
+				case 'ArrowUp':
+					event.preventDefault();
+					this.highlightedSuggestion = this.highlightedSuggestion <= 0 ? count - 1 : this.highlightedSuggestion - 1;
+					break;
+				case 'Enter':
+					if (this.highlightedSuggestion >= 0) {
+						event.preventDefault();
+						this.selectSuggestion(index, this.suggestions[this.highlightedSuggestion]);
+					}
+					break;
+				case 'Escape':
+					this.closeSuggestions();
+					break;
+			}
+		},
+		onUserBlur: function () {
+			this.closeSuggestions();
+			this.getDetails();
+		},
+		selectSuggestion: function (index, friend) {
+			this.closeSuggestions();
+			this.users.splice(index, 1, friend.id);
+			this.addUserIfNeeded();
+			this.getDetails();
+		},
+		closeSuggestions: function () {
+			clearTimeout(suggestionTimer);
+			this.suggestionIndex = null;
+			this.suggestions = [];
+			this.highlightedSuggestion = -1;
 		},
 		resetGameSelection: function () {
 			this.gameList = null;
@@ -159,6 +302,9 @@ new Vue({
 								user => {
 									if (result.data[user] && !this.details[user]) {
 										this.details[user] = result.data[user];
+										if (result.data[user].id) {
+											this.loadFriends(result.data[user].id);
+										}
 										return this.getGames(user);
 									}
 								}

@@ -10,6 +10,7 @@ class RedisService {
 		this._keyId = 'id';
 		this._keyGames = 'games';
 		this._keyDetails = 'details';
+		this._keyFriends = 'friends';
 
 		this._client = redis.createClient({
 			host: global.getEnv('REDIS_SERVICE_HOST'),
@@ -73,6 +74,16 @@ class RedisService {
 		return this.set(`${this._keyGames}.${id}`, JSON.stringify(gamesList));
 	}
 
+	/**
+	 * Set Steam friends details for Steam user ID
+	 * @param {string} id - Steam user ID
+	 * @param {UserDetails[]} friends - Steam friends details
+	 * @return {Promise}
+	 */
+	setFriendsForUserId(id, friends) {
+		return this.set(`${this._keyFriends}.${id}`, JSON.stringify(friends));
+	}
+
 
 	/***********
 	 * GETTERS *
@@ -113,6 +124,15 @@ class RedisService {
 	 */
 	getGamesByUserId(id) {
 		return this.get(`${this._keyGames}.${id}`);
+	}
+
+	/**
+	 * Get Steam friends details by Steam user ID
+	 * @param {string} id - Steam user ID
+	 * @return {Promise<UserDetails[]|null>}
+	 */
+	getFriendsByUserId(id) {
+		return this.get(`${this._keyFriends}.${id}`);
 	}
 
 }

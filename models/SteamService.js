@@ -2,6 +2,23 @@ const q = require('q');
 const RedisService = require('./RedisService');
 const SteamApiService = require('./SteamApiService');
 
+// GetPlayerSummaries accepts at most 100 Steam user IDs per call
+const MAX_IDS_PER_SUMMARY_CALL = 100;
+
+/**
+ * @param {Object} player - Player from GetPlayerSummaries
+ * @returns {UserDetails}
+ */
+function toUserDetails(player) {
+	return {
+		id: player.steamid,
+		url: player.profileurl,
+		icon: player.avatarfull,
+		name: player.personaname,
+		state: player.personastate
+	};
+}
+
 class SteamService {
 	/**
 	 * Constructor
@@ -125,25 +142,20 @@ class SteamService {
 				}
 
 				if (!result || !result.response || !Array.isArray(result.response.players)) {
-					defer.reject({ error: 'No players', status: 500 })
+					return defer.reject({ error: 'No players', status: 500 });
 				}
 
 				result.response.players.forEach(player => {
 					const name = nameIds[player.steamid];
 
-					userResult[name] = {
-						id: player.steamid,
-						url: player.profileurl,
-						icon: player.avatarfull,
-						name: player.personaname,
-						state: player.personastate
-					};
+					userResult[name] = toUserDetails(player);
 
 					return this._redis.setUserDetailsForUserId(player.steamid, userResult[name]);
 				});
 
 				defer.resolve(userResult);
-			});
+			})
+			.catch(reason => defer.reject(reason));
 
 		return defer.promise;
 	}
@@ -173,7 +185,7 @@ class SteamService {
 				}
 
 				if (!result || !result.response || !Array.isArray(result.response.games)) {
-					defer.reject({ error: 'No games', status: 500 })
+					return defer.reject({ error: 'No games', status: 500 });
 				}
 
 				const userGames = result.response.games.map(game => ({
@@ -188,6 +200,48 @@ class SteamService {
 			.catch(reason => defer.reject(reason));
 
 		return defer.promise;
+	}
+
+	/**
+	 * Get Steam friends details for Steam user ID
+	 * @param {string} id - Steam user ID
+	 * @returns {Promise<UserDetails[]>}
+	 */
+	getFriendsByUserId(id) {
+		return this._redis.getFriendsByUserId(id)
+			.then(cached => {
+				if (cached) {
+					return JSON.parse(cached);
+				}
+
+				return this._api.getFriendsByUserId(id)
+					.catch(reason => {
+						throw reason.status === 401 ? { status: 403, error: 'Friends list is private' } : reason;
+					})
+					.then(result => {
+						const friendIds = result && result.friendslist && Array.isArray(result.friendslist.friends)
+							? result.friendslist.friends.map(friend => friend.steamid)
+							: [];
+
+						const chunks = [];
+						for (let i = 0; i < friendIds.length; i += MAX_IDS_PER_SUMMARY_CALL) {
+							chunks.push(friendIds.slice(i, i + MAX_IDS_PER_SUMMARY_CALL));
+						}
+
+						return q.all(chunks.map(chunk => this._api.getUsersDetailsByUserIds(chunk)));
+					})
+					.then(results => {
+						const friends = [];
+						results.forEach(summary => {
+							if (summary && summary.response && Array.isArray(summary.response.players)) {
+								summary.response.players.forEach(player => friends.push(toUserDetails(player)));
+							}
+						});
+
+						return this._redis.setFriendsForUserId(id, friends)
+							.then(() => friends);
+					});
+			});
 	}
 }
 
