@@ -1,6 +1,6 @@
 # What Should We Play On Steam
 
-Fork of [Timmy1e/what-should-we-play-on-steam](https://gitlab.com/Timmy1e/what-should-we-play-on-steam).
+Fork of [Timmy1e/what-should-we-play-on-steam](https://gitlab.com/Timmy1e/what-should-we-play-on-steam), originally created by Tim van Leuverden.
 
 Finding a game to play with friends is often tedious: everyone compares their library with the others, by hand. This application compares the Steam libraries of several players to show the games they have in common, using the [Steam APIs](https://developer.valvesoftware.com/wiki/).
 
@@ -27,13 +27,13 @@ Finding a game to play with friends is often tedious: everyone compares their li
    cd what-should-we-play-on-steam
    ```
 
-2. Create a `.env` file at the project root, with your Steam API key:
+2. Copy `.env.example` to `.env`, then set your Steam API key in it:
 
    ```env
    STEAM_KEY=YOUR_STEAM_KEY
    ```
 
-   This file is ignored by Git and Docker: the key never ends up in the repository or in the image.
+   The `.env` file is ignored by Git and Docker: the key never ends up in the repository or in the image.
 
 3. Start Docker Desktop and check that the daemon responds:
 
