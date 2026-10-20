@@ -2,7 +2,12 @@
 <html>
 <%
 locals.route = [{ title: 'Error', location: '' }];
-locals.styles = ['/styles/main.css'];
+locals.styles = [
+    '/dist/fontawesome/css/fontawesome.min.css',
+    '/dist/fontawesome/css/brands.min.css',
+    '/dist/fontawesome/css/solid.min.css',
+    '/styles/main.css'
+];
 %>
 <% include _partials/head.ejs %>
 <body class="error-page">

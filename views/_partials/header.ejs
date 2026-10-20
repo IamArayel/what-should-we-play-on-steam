@@ -1,8 +1,40 @@
-<nav>
-    <div class="nav-bar">
-            <img class="brand-img"
-                 src="/images/logo.svg"
+<header class="site-header">
+    <div class="site-header-inner">
+        <div class="brand-tile">
+            <img src="/images/logo.svg"
                  alt=""/>
-            <div class="brand">What Should We Play On Steam</div>
+        </div>
+        <div class="brand">
+            <span class="brand-name">What Should We Play</span>
+            <span class="brand-sub">On Steam</span>
+        </div>
+        <div class="theme-toggle"
+             role="group"
+             aria-label="Theme">
+            <button class="theme-light"
+                    type="button"
+                    data-set-theme="light"
+                    aria-label="Switch to light theme"
+                    title="Light theme">
+                <i class="fas fa-sun"
+                   aria-hidden="true"></i>
+            </button>
+            <button class="theme-dark"
+                    type="button"
+                    data-set-theme="dark"
+                    aria-label="Switch to dark theme"
+                    title="Dark theme">
+                <i class="fas fa-moon"
+                   aria-hidden="true"></i>
+            </button>
+        </div>
+        <a class="icon-link"
+           href="https://github.com/IamArayel/what-should-we-play-on-steam"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Source on GitHub">
+            <i class="fab fa-github"
+               aria-hidden="true"></i>
+        </a>
     </div>
-</nav>
+</header>

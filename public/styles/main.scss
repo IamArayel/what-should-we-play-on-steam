@@ -1,210 +1,284 @@
 @charset "UTF-8";
-$FontPathOpenSans: "/dist/open-sans";
-//$fa-font-path: "/dist/font-awesome";
-@import "node_modules/open-sans-fonts/open-sans.scss";
-//@import "node_modules/font-awesome/scss/font-awesome.scss";
-@import "node_modules/include-media/dist/include-media";
 
-$border-radius: 6px;
-$layer-even: #30363d;
-$layer-odd: #3c444d;
-$text-color: #eeeeee;
-$text-dark: #444444;
+$font-display: "Chakra Petch", sans-serif;
+$font-body: "IBM Plex Sans", system-ui, sans-serif;
+$font-mono: "IBM Plex Mono", monospace;
 
-$review-color: #3da5d9;
-$merge-color: #73bfb8;
-
-$color-default: #828282;
-$color-success: #1aaa55;
-$color-failed: #db3b21;
-$color-warning: #fc9403;
-$color-manual: #9b51e0;
-$color-running: #2e87e0;
-$color-canceled: #f2c94c;
-$color-skipped: #bdbdbd;
-
-$font-default: "Open Sans", sans-serif;
-$font-bold: "Open Sans ExtraBold", sans-serif;
-$font-condensed: "Open Sans Condensed", sans-serif;
+$container-width: 1160px;
 
 @mixin ellipsis {
 	overflow: hidden;
 	white-space: nowrap;
-	text-overflow: clip;
+	text-overflow: ellipsis;
 }
 
-@mixin animate {
-	transition: all linear 0.1s;
+@mixin eyebrow {
+	font-family: $font-mono;
+	font-size: 12px;
+	letter-spacing: .16em;
+	text-transform: uppercase;
 }
 
-html {
-	color: $text-color;
-	position: relative;
-	min-height: 100%;
-	font-family: $font-default;
-	background-color: $layer-even;
+// Dark is the default; theme.js sets data-theme on <html> before paint
+:root {
+	--bg: #141a24;
+	--bg-grad: radial-gradient(1200px 600px at 15% -10%, #2a4a68 0%, transparent 60%), linear-gradient(180deg, #1d3149 0%, #18263a 35%, #141c2a 75%, #11161f 100%);
+	--header: rgba(16, 24, 36, .72);
+	--surface: rgba(23, 34, 50, .82);
+	--surface-2: rgba(42, 62, 88, .45);
+	--border: rgba(120, 160, 200, .16);
+	--text: #e6edf5;
+	--muted: #9fb0c3;
+	--accent: oklch(0.76 0.12 235);
+	--accent-ink: #0b1622;
+	--accent-soft: oklch(0.76 0.12 235 / 0.16);
+	--success: oklch(0.72 0.15 150);
+	--success-soft: oklch(0.72 0.15 150 / 0.14);
+	--danger: oklch(0.68 0.17 25);
+	--danger-soft: oklch(0.68 0.17 25 / 0.14);
+	--warn: oklch(0.80 0.13 75);
+	--warn-soft: oklch(0.80 0.13 75 / 0.12);
+	--shadow: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 12px 32px -12px rgba(0, 0, 0, .6);
+}
 
-	body {
-		margin: 100px 0;
+:root[data-theme="light"] {
+	--bg: #f3f4f6;
+	--bg-grad: none;
+	--header: rgba(243, 244, 246, .85);
+	--surface: #ffffff;
+	--surface-2: #eef0f3;
+	--border: #dde1e6;
+	--text: #14181d;
+	--muted: #5b646e;
+	--accent: oklch(0.54 0.16 245);
+	--accent-ink: #ffffff;
+	--accent-soft: oklch(0.54 0.16 245 / 0.10);
+	--success: oklch(0.52 0.14 150);
+	--success-soft: oklch(0.52 0.14 150 / 0.10);
+	--danger: oklch(0.54 0.18 25);
+	--danger-soft: oklch(0.54 0.18 25 / 0.09);
+	--warn: oklch(0.52 0.12 70);
+	--warn-soft: oklch(0.75 0.13 75 / .18);
+	--shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 8px 24px -12px rgba(16, 24, 40, .12);
+}
 
-		a {
-			@include animate;
-			text-decoration: none;
-			color: $color-running;
-			position: relative;
+*, *::before, *::after {
+	box-sizing: border-box;
+}
 
-			&:hover {
-				color: darken($color-running, 10)
-			}
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 
-			&[disabled] {
-				cursor: not-allowed;
-			}
+	color: var(--text);
+	background: var(--bg);
+	background-image: var(--bg-grad);
+	background-attachment: fixed;
+
+	font-family: $font-body;
+	font-size: 15px;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+
+	transition: background .2s, color .2s;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+	transition: color .15s, border-color .15s, filter .15s;
+
+	&:hover {
+		color: var(--text);
+	}
+}
+
+button {
+	font: inherit;
+	cursor: pointer;
+	transition: background .15s, color .15s, border-color .15s, filter .15s, opacity .15s;
+
+	&[disabled] {
+		cursor: not-allowed;
+		opacity: .45;
+	}
+}
+
+a, button {
+	&:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+}
+
+input::placeholder {
+	color: var(--muted);
+	opacity: .8;
+}
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+
+	background: var(--header);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-bottom: 1px solid var(--border);
+
+	.site-header-inner {
+		max-width: $container-width;
+		margin: 0 auto;
+		padding: 12px 24px;
+
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	.brand-tile {
+		flex: none;
+		width: 40px;
+		height: 40px;
+
+		display: grid;
+		place-items: center;
+
+		border-radius: 10px;
+		border: 1px solid var(--border);
+		background: #1b2838;
+
+		img {
+			width: 30px;
+			height: 30px;
 		}
+	}
+
+	.brand {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		line-height: 1.1;
+	}
+
+	.brand-name {
+		@include ellipsis;
+
+		font-family: $font-display;
+		font-weight: 700;
+		font-size: 19px;
+		letter-spacing: .01em;
+	}
+
+	.brand-sub {
+		font-family: $font-mono;
+		font-size: 11px;
+		letter-spacing: .18em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.theme-toggle {
+		flex: none;
+		display: flex;
+		gap: 2px;
+		padding: 3px;
+
+		border-radius: 9px;
+		border: 1px solid var(--border);
+		background: var(--surface-2);
 
 		button {
-			@include animate;
-			border: none;
-			cursor: pointer;
-			position: relative;
+			width: 32px;
+			height: 28px;
 
-			&:focus {
-				outline: none;
-			}
+			display: grid;
+			place-items: center;
 
-			&[disabled] {
-				cursor: not-allowed;
-			}
+			border: 0;
+			border-radius: 6px;
+			font-size: 13px;
+
+			color: var(--muted);
+			background: transparent;
 		}
+	}
 
-		nav {
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 60px;
-			position: absolute;
+	.icon-link {
+		flex: none;
+		width: 36px;
+		height: 36px;
 
-			padding: 10px 50px;
+		display: grid;
+		place-items: center;
 
-			background-color: $layer-odd;
+		border-radius: 9px;
+		border: 1px solid var(--border);
+		font-size: 17px;
+		color: var(--muted);
 
-			@include media("<tablet") {
-				padding: 10px;
-			}
-
-			.nav-bar {
-				width: 100%;
-				height: 100%;
-				position: relative;
-
-				.brand {
-					@include ellipsis();
-
-					display: inline-block;
-					font-size: 36px;
-					max-width: 100%;
-					line-height: 60px;
-
-					@include media("<tablet") {
-						font-size: 18px;
-					}
-				}
-
-				.brand-img {
-					height: 60px;
-
-					@include media(">=tablet") {
-						margin-right: 25px;
-					}
-				}
-			}
+		&:hover {
+			color: var(--text);
+			border-color: var(--muted);
 		}
+	}
+}
 
-		.text {
-			&.warn {
-				color: $color-warning;
-			}
+:root:not([data-theme="light"]) .theme-dark,
+:root[data-theme="light"] .theme-light {
+	color: var(--text);
+	background: var(--surface);
+}
 
-			&.error {
-				color: $color-failed;
-			}
+.content {
+	flex: 1;
+	width: 100%;
+	max-width: $container-width;
+	margin: 0 auto;
+	padding: 40px 24px 56px;
+}
 
-			&.condensed {
-				font-family: $font-condensed;
-			}
-		}
+.site-footer {
+	border-top: 1px solid var(--border);
 
-		.alerts {
-			margin: 20px 5px;
+	.site-footer-inner {
+		max-width: $container-width;
+		margin: 0 auto;
+		padding: 18px 24px;
 
-			.alert {
-				margin: 10px 0;
-				padding: 10px;
-				text-align: center;
-				border-radius: $border-radius;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		justify-content: space-between;
 
-				&.warn {
-					color: $text-dark;
-					background-color: $color-warning;
+		font-size: 13px;
+		color: var(--muted);
+	}
+}
 
-					&:before {
-						content: 'Warning!';
-						float: left;
-						font-weight: bold;
-						font-family: $font-condensed;
-					}
-				}
+.text {
+	&.warn {
+		color: var(--warn);
+	}
 
-				&.error {
-					background-color: $color-failed;
+	&.error {
+		color: var(--danger);
+	}
 
-					&:before {
-						content: 'Error!';
-						float: left;
-						font-weight: bold;
-						font-family: $font-condensed;
-					}
-				}
-			}
-		}
+	&.condensed {
+		font-family: $font-display;
+	}
+}
 
-		.content {
-			margin: auto;
-			padding: 0 20px;
-		}
+.alert {
+	padding: 10px 12px;
+	border-radius: 9px;
 
-		footer {
-			left: 0;
-			right: 0;
-			color: $color-skipped;
-			height: 40px;
-			bottom: 0;
-			display: flex;
-			padding: 10px 30px;
-			position: absolute;
-			flex-wrap: wrap;
-			background-color: $layer-odd;
-
-			.foot {
-				max-width: 100%;
-				flex-grow: 1;
-				flex-basis: 0;
-				line-height: 40px;
-			}
-
-			.left {
-				float: left;
-				text-align: start;
-			}
-
-			.center {
-				text-align: center;
-			}
-
-			.right {
-				float: right;
-				text-align: end;
-			}
-		}
+	&.error {
+		color: var(--danger);
+		background: var(--danger-soft);
 	}
 }

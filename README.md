@@ -89,6 +89,12 @@ Depending on the changed file:
 | `app.js`, `server.js`, `routes/`, `models/` | Restart the application: `docker compose restart app` |
 | `package.json`, `Dockerfile` | Rebuild: `docker compose up --build` |
 
+Redis keeps running across Git branch switches, so after `git checkout` the home page can still show the previous branch's HTML. To refresh the cache, run:
+
+```bash
+docker compose exec redis redis-cli FLUSHALL
+```
+
 ## Environment variables
 
 | Variable | Purpose | Default |
