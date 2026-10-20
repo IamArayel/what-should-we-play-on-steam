@@ -99,6 +99,9 @@ new Vue({
 	computed: {
 		canSaveGroup: function () {
 			return this.groupName !== '' && this.users.some(user => user !== '');
+		},
+		remaining: function () {
+			return this.gameList ? this.gameList.length : 0;
 		}
 	},
 	created: function () {
@@ -128,23 +131,17 @@ new Vue({
 				.filter(user => this.details[user] && this.details[user].id)
 				.map(user => this.details[user].id);
 		},
-		getEnteredNamesIn: function (ids) {
-			return this.users
-				.filter(user => this.details[user] && ids.indexOf(this.details[user].id) !== -1)
-				.map(user => this.details[user].name);
+		isResolved: function (user) {
+			return Boolean(this.details[user] && this.details[user].name);
 		},
-		getFriendsWarnings: function () {
-			const warnings = [];
-			const privateNames = this.getEnteredNamesIn(this.privateFriendLists);
-			const failedNames = this.getEnteredNamesIn(this.failedFriendLists);
-
-			if (privateNames.length > 0) {
-				warnings.push(`Friends lists of ${privateNames.join(', ')} are private: their friends won't be suggested.`);
-			}
-			if (failedNames.length > 0) {
-				warnings.push(`Friends of ${failedNames.join(', ')} could not be loaded: their friends won't be suggested.`);
-			}
-			return warnings;
+		getResolvedCount: function () {
+			return this.users.filter(this.isResolved).length;
+		},
+		isActiveGroup: function (group) {
+			const members = this.users.filter(user => user !== '');
+			return group.name === this.groupName
+				&& group.members.length === members.length
+				&& group.members.every((member, index) => member === members[index]);
 		},
 		loadFriends: function (id) {
 			if (this.friends[id] || this.privateFriendLists.indexOf(id) !== -1 || this.failedFriendLists.indexOf(id) !== -1) {
