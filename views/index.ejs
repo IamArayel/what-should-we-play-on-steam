@@ -12,82 +12,68 @@
 
 <main id="index"
       class="content">
-    <div class="hero">
-        <span class="eyebrow">Game night picker</span>
-        <h1>Find a game the whole squad owns.</h1>
-        <p>
-            Add each player by Steam custom URL or 17-digit ID.
-            Once one player is found, type a friend's name to get suggestions. Then roll.
-        </p>
-    </div>
+    <h1 class="hero">Find a game the whole squad owns.</h1>
+
+    <section class="card result"
+             aria-live="polite"
+             v-if="selectedGame">
+        <div class="result-image">
+            <img alt=""
+                 width="460"
+                 height="215"
+                 :class="{ loading: loading }"
+                 :src="getLogoUri(selectedGame)"/>
+        </div>
+        <div class="result-info">
+            <span class="result-eyebrow">
+                <i class="fas fa-check"
+                   aria-hidden="true"></i>
+                Everyone owns it
+            </span>
+            <h2>{{selectedGame.name}}</h2>
+            <div class="result-actions">
+                <a class="btn btn-outline"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   title="Visit the store page"
+                   :href="'//store.steampowered.com/app/' + selectedGame.id">
+                    <i class="fas fa-store"
+                       aria-hidden="true"></i>
+                    Store
+                </a>
+                <a class="btn btn-success"
+                   title="Launch game"
+                   :href="'steam://run/' + selectedGame.id">
+                    <i class="fas fa-play"
+                       aria-hidden="true"></i>
+                    Launch
+                </a>
+                <span class="result-remaining">{{remaining}} left to roll</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="empty-state"
+             v-else>
+        <div class="empty-state-icon">
+            <i class="fas fa-dice"
+               aria-hidden="true"></i>
+        </div>
+        <div>
+            <span class="empty-state-title">No game picked yet</span>
+            <span class="empty-state-hint"
+                  v-if="getResolvedCount() < 2">Add at least two players, then roll the dice.</span>
+            <span class="empty-state-hint"
+                  v-else>{{matchingGames}} games in common. Hit the dice to pick one.</span>
+        </div>
+    </section>
 
     <div class="columns">
         <div class="column-main">
-
-            <section class="card result"
-                     aria-live="polite"
-                     v-if="selectedGame">
-                <div class="result-image">
-                    <img alt=""
-                         :class="{ loading: loading }"
-                         :src="getLogoUri(selectedGame)"/>
-                </div>
-                <div class="result-info">
-                    <span class="result-eyebrow">
-                        <i class="fas fa-check"
-                           aria-hidden="true"></i>
-                        Everyone owns it
-                    </span>
-                    <h2>{{selectedGame.name}}</h2>
-                    <div class="result-actions">
-                        <button class="btn btn-accent"
-                                type="button"
-                                title="Play something else"
-                                @click="whatShouldWePlay()"
-                                :disabled="loading">
-                            <i v-if="!loading"
-                               class="fas fa-dice"
-                               aria-hidden="true"></i>
-                            <i v-if="loading"
-                               class="fas fa-spinner fa-spin"
-                               aria-hidden="true"></i>
-                            Reroll
-                        </button>
-                        <a class="btn btn-outline"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           title="Visit the store page"
-                           :href="'//store.steampowered.com/app/' + selectedGame.id">
-                            <i class="fas fa-store"
-                               aria-hidden="true"></i>
-                            Store
-                        </a>
-                        <a class="btn btn-success"
-                           title="Launch game"
-                           :href="'steam://run/' + selectedGame.id">
-                            <i class="fas fa-play"
-                               aria-hidden="true"></i>
-                            Launch
-                        </a>
-                        <span class="result-remaining">{{remaining}} left to roll</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="empty-state"
-                     v-else>
-                <div class="empty-state-icon">
-                    <i class="fas fa-dice"
-                       aria-hidden="true"></i>
-                </div>
-                <div>
-                    <span class="empty-state-title">No game picked yet</span>
-                    <span class="empty-state-hint"
-                          v-if="getResolvedCount() < 2">Add at least two players, then roll the dice.</span>
-                    <span class="empty-state-hint"
-                          v-else>{{matchingGames}} games in common. Hit the dice to pick one.</span>
-                </div>
-            </section>
+            <p class="intro">
+                Add each player by Steam custom URL or 17-digit ID.
+                Once one player is found, type a friend's name to get suggestions. Then roll.
+            </p>
 
             <section class="card players"
                      aria-labelledby="players-title">
@@ -211,30 +197,30 @@
                         </ul>
                     </div>
                 </template>
-
-                <div class="card-footer">
-                    <div class="common-count">
-                        <span class="common-count-value">{{matchingGames}}</span>
-                        <span class="common-count-label">games in common</span>
-                    </div>
-                    <button class="btn-roll"
-                            type="button"
-                            title="What should we play?"
-                            @click="whatShouldWePlay()"
-                            :disabled="loading || getResolvedCount() < 2">
-                        <i v-if="!loading"
-                           class="fas fa-dice"
-                           aria-hidden="true"></i>
-                        <i v-if="loading"
-                           class="fas fa-spinner fa-spin"
-                           aria-hidden="true"></i>
-                        What should we play?
-                    </button>
-                </div>
             </section>
         </div>
 
         <aside class="column-side">
+            <section class="card roll-card">
+                <div class="common-count">
+                    <span class="common-count-value">{{matchingGames}}</span>
+                    <span class="common-count-label">games in common</span>
+                </div>
+                <button class="btn-roll"
+                        type="button"
+                        title="What should we play?"
+                        @click="whatShouldWePlay()"
+                        :disabled="loading || getResolvedCount() < 2">
+                    <i v-if="!loading"
+                       class="fas fa-dice"
+                       aria-hidden="true"></i>
+                    <i v-if="loading"
+                       class="fas fa-spinner fa-spin"
+                       aria-hidden="true"></i>
+                    What should we play?
+                </button>
+            </section>
+
             <section class="card groups"
                      aria-labelledby="groups-title">
                 <div class="card-header card-header-stacked">

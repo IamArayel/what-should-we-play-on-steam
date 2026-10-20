@@ -28,26 +28,20 @@
 
 .hero {
 	max-width: 720px;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+	margin: 0;
+	font-family: $font-display;
+	font-weight: 700;
+	font-size: clamp(30px, 4.2vw, 44px);
+	line-height: 1.05;
+	letter-spacing: -.01em;
+	text-wrap: balance;
+}
 
-	h1 {
-		margin: 0;
-		font-family: $font-display;
-		font-weight: 700;
-		font-size: clamp(30px, 4.2vw, 44px);
-		line-height: 1.05;
-		letter-spacing: -.01em;
-		text-wrap: balance;
-	}
-
-	p {
-		margin: 0;
-		font-size: 16px;
-		color: var(--muted);
-		text-wrap: pretty;
-	}
+.intro {
+	margin: 0;
+	font-size: 16px;
+	color: var(--muted);
+	text-wrap: pretty;
 }
 
 .columns {
@@ -136,18 +130,6 @@
 	font-size: 14px;
 	font-weight: 500;
 	white-space: nowrap;
-
-	&.btn-accent {
-		padding: 0 16px;
-		font-weight: 600;
-		color: var(--accent-ink);
-		background: var(--accent);
-
-		&:hover:not([disabled]) {
-			color: var(--accent-ink);
-			filter: brightness(1.08);
-		}
-	}
 
 	&.btn-outline {
 		color: var(--text);
@@ -244,21 +226,16 @@
 	flex-wrap: wrap;
 	overflow: hidden;
 
+	// Native size of Steam header images: never upscaled, never cropped
 	.result-image {
-		flex: 1 1 300px;
+		flex: 0 1 460px;
 		min-width: 0;
-		aspect-ratio: 460 / 215;
-		position: relative;
-		overflow: hidden;
 		background: var(--surface-2);
 
 		img {
-			position: absolute;
-			inset: 0;
 			width: 100%;
-			height: 100%;
+			height: auto;
 			display: block;
-			object-fit: cover;
 			transition: opacity .25s;
 
 			&.loading {
@@ -525,24 +502,21 @@
 	.player-field + .player-field .suggestions {
 		top: 48px;
 	}
+}
 
-	.card-footer {
-		padding: 16px 20px;
-		border-top: 1px solid var(--border);
-		border-radius: 0 0 16px 16px;
-		background: var(--surface-2);
+// Roll
 
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 16px;
-	}
+.roll-card {
+	padding: 20px;
+
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
 
 	.common-count {
 		display: flex;
 		flex-direction: column;
 		line-height: 1.2;
-		margin-right: auto;
 
 		.common-count-value {
 			font-family: $font-display;
@@ -562,6 +536,7 @@
 
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 10px;
 
 		border: 0;
