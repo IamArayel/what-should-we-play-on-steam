@@ -72,9 +72,9 @@ app.use((req, res, next) => {
 	res.setHeader('Content-Security-Policy', [
 		"default-src 'none'",
 		"script-src 'self' 'unsafe-eval'",
-		"style-src 'self'",
+		"style-src 'self' https://fonts.googleapis.com",
 		"img-src 'self' https://steamcdn-a.akamaihd.net https://*.steamstatic.com",
-		"font-src 'self'",
+		"font-src 'self' https://fonts.gstatic.com",
 		"connect-src 'self'",
 		"base-uri 'self'",
 		"form-action 'self'",
