@@ -76,6 +76,26 @@ function rankFriendSuggestions(friendLists, excludedIds, query) {
 		.map(match => match.friend);
 }
 
+const VENN_RADIUS_X = 140;
+const VENN_RADIUS_Y = 90;
+const VENN_OFFSET = 80;
+const VENN_COLORS = [25, 65, 100, 145, 180, 280, 320, 355].map(hue => `oklch(0.72 0.15 ${hue})`);
+
+/**
+ * Lay out one ellipse per player as petals around the center
+ * The offset is smaller than the radius, so every ellipse covers the center and the shared area always exists
+ * @param {number} count
+ * @returns {{rx: number, ry: number, transform: string}[]}
+ */
+function layoutVennEllipses(count) {
+	const offset = count > 1 ? VENN_OFFSET : 0;
+	return Array.from({ length: count }, (_, index) => ({
+		rx: VENN_RADIUS_X,
+		ry: VENN_RADIUS_Y,
+		transform: `rotate(${index * 360 / count - 90}) translate(${offset} 0)`
+	}));
+}
+
 new Vue({
 	el: '#index',
 	data: {
@@ -94,7 +114,8 @@ new Vue({
 		failedFriendLists: [],
 		suggestionIndex: null,
 		suggestions: [],
-		highlightedSuggestion: -1
+		highlightedSuggestion: -1,
+		hoveredPlayer: null
 	},
 	computed: {
 		canSaveGroup: function () {
@@ -136,6 +157,17 @@ new Vue({
 		},
 		getResolvedCount: function () {
 			return this.users.filter(this.isResolved).length;
+		},
+		getVennPlayers: function () {
+			const players = this.users.filter(this.isResolved);
+			return layoutVennEllipses(players.length).map((ellipse, index) => Object.assign({
+				user: players[index],
+				color: VENN_COLORS[index % VENN_COLORS.length]
+			}, ellipse));
+		},
+		// A removed player can stay hovered because its ellipse vanishes before mouseleave fires
+		getHoveredPlayer: function () {
+			return this.users.indexOf(this.hoveredPlayer) !== -1 && this.isResolved(this.hoveredPlayer) ? this.hoveredPlayer : null;
 		},
 		isActiveGroup: function (group) {
 			const members = this.users.filter(user => user !== '');
