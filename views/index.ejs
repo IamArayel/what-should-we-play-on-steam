@@ -70,11 +70,6 @@
 
     <div class="columns">
         <div class="column-main">
-            <p class="intro">
-                Add each player by Steam custom URL or 17-digit ID.
-                Once one player is found, type a friend's name to get suggestions. Then roll.
-            </p>
-
             <section class="card players"
                      aria-labelledby="players-title">
                 <div class="card-header">
@@ -148,7 +143,7 @@
                                    @keydown="onUserKeydown($event, index)"
                                    @blur="onUserBlur()"
                                    type="text"
-                                   placeholder="Steam ID, custom URL or friend name"
+                                   placeholder="Steam ID or friend name"
                                    role="combobox"
                                    aria-autocomplete="list"
                                    :aria-label="'Player ' + (index + 1)"
@@ -198,7 +193,98 @@
                     </div>
                 </template>
             </section>
+
+            <p class="intro">
+                Add each player by Steam custom URL or 17-digit ID.
+                Once one player is found, type a friend's name to get suggestions. Then roll.
+            </p>
+
+            <section class="help">
+                <span class="eyebrow eyebrow-muted">Not finding someone?</span>
+                <div class="help-row">
+                    <i class="fas fa-eye help-icon-warn"
+                       aria-hidden="true"></i>
+                    <span>Steam profile <b>and</b> game details must be set to <b>Public</b> in Steam privacy settings.</span>
+                </div>
+                <div class="help-row">
+                    <i class="fas fa-hashtag help-icon-accent"
+                       aria-hidden="true"></i>
+                    <span>Use the part after <code>steamcommunity.com/id/</code> or the 17-digit ID.</span>
+                </div>
+            </section>
         </div>
+
+        <section class="card venn"
+                 aria-labelledby="venn-title">
+            <div class="card-header card-header-stacked">
+                <h3 id="venn-title">Your libraries</h3>
+                <span class="card-note">One shape per player. The dice picks from the middle, where they all overlap. Hover a shape to see whose it is.</span>
+            </div>
+
+            <div class="venn-body">
+                <%# Always rendered, so its reserved height keeps the diagram still when a hover fills it %>
+                <p class="venn-caption">
+                    <template v-if="getHoveredPlayer()">
+                        <img class="avatar"
+                             alt=""
+                             v-if="details[getHoveredPlayer()].icon"
+                             :src="details[getHoveredPlayer()].icon"/>
+                        <span class="venn-caption-name">{{details[getHoveredPlayer()].name}}</span>
+                        <span class="venn-caption-games">{{games[getHoveredPlayer()] ? games[getHoveredPlayer()].length : 0}} games</span>
+                    </template>
+                    <template v-else-if="getResolvedCount() === 1">
+                        Add another player to see what you share.
+                    </template>
+                    <template v-else-if="getResolvedCount() === 0">
+                        Add players to see how your libraries overlap.
+                    </template>
+                </p>
+
+                <svg class="venn-diagram"
+                     viewBox="-230 -230 460 460"
+                     role="group"
+                     aria-label="Players' libraries"
+                     v-if="getResolvedCount() > 0"
+                     :class="{ 'has-hovered': getHoveredPlayer() }">
+                    <defs>
+                        <%# Each clip is clipped by the previous one, so the last clip is the area shared by everyone %>
+                        <clipPath v-for="(player, index) in getVennPlayers()"
+                                  :id="'venn-clip-' + index">
+                            <ellipse :rx="player.rx"
+                                     :ry="player.ry"
+                                     :transform="player.transform"
+                                     :clip-path="index > 0 ? 'url(#venn-clip-' + (index - 1) + ')' : null"/>
+                        </clipPath>
+                    </defs>
+                    <ellipse class="venn-player"
+                             v-for="player in getVennPlayers()"
+                             tabindex="0"
+                             role="img"
+                             :aria-label="details[player.user].name + ', ' + (games[player.user] ? games[player.user].length : 0) + ' games'"
+                             :class="{ hovered: getHoveredPlayer() === player.user }"
+                             :style="{ fill: player.color, stroke: player.color }"
+                             :rx="player.rx"
+                             :ry="player.ry"
+                             :transform="player.transform"
+                             @mouseenter="hoveredPlayer = player.user"
+                             @mouseleave="hoveredPlayer = null"
+                             @focus="hoveredPlayer = player.user"
+                             @blur="hoveredPlayer = null"/>
+                    <rect class="venn-common"
+                          x="-230"
+                          y="-230"
+                          width="460"
+                          height="460"
+                          :clip-path="'url(#venn-clip-' + (getResolvedCount() - 1) + ')'"/>
+                    <text class="venn-count"
+                          x="0"
+                          y="0"
+                          text-anchor="middle"
+                          dominant-baseline="central"
+                          v-if="getResolvedCount() > 1">{{matchingGames}}</text>
+                </svg>
+            </div>
+        </section>
 
         <aside class="column-side">
             <section class="card roll-card">
@@ -208,7 +294,6 @@
                 </div>
                 <button class="btn-roll"
                         type="button"
-                        title="What should we play?"
                         @click="whatShouldWePlay()"
                         :disabled="loading || getResolvedCount() < 2">
                     <i v-if="!loading"
@@ -217,7 +302,7 @@
                     <i v-if="loading"
                        class="fas fa-spinner fa-spin"
                        aria-hidden="true"></i>
-                    What should we play?
+                    Roll a game
                 </button>
             </section>
 
@@ -296,20 +381,6 @@
                    v-else>
                     No saved groups yet. Add some players, name the group and save it.
                 </p>
-            </section>
-
-            <section class="help">
-                <span class="eyebrow eyebrow-muted">Not finding someone?</span>
-                <div class="help-row">
-                    <i class="fas fa-eye help-icon-warn"
-                       aria-hidden="true"></i>
-                    <span>Steam profile <b>and</b> game details must be set to <b>Public</b> in Steam privacy settings.</span>
-                </div>
-                <div class="help-row">
-                    <i class="fas fa-hashtag help-icon-accent"
-                       aria-hidden="true"></i>
-                    <span>Use the part after <code>steamcommunity.com/id/</code> or the 17-digit ID.</span>
-                </div>
             </section>
         </aside>
     </div>

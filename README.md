@@ -1,4 +1,6 @@
-# What Should We Play On Steam
+# VennPlay
+
+*Venn & Play: overlap your Steam libraries, then play.*
 
 Fork of [Timmy1e/what-should-we-play-on-steam](https://gitlab.com/Timmy1e/what-should-we-play-on-steam), originally created by Tim van Leuverden.
 
@@ -65,6 +67,8 @@ For later runs, `docker compose up` is enough. `--build` is only needed after ch
 1. Open [http://localhost:3000](http://localhost:3000).
 2. For each player, enter their Steam custom URL (the part after `steamcommunity.com/id/`) or their 17-digit ID. A new field appears as soon as a name is entered. Once a player is found, typing at least 2 letters of one of their friends' names shows up to 8 suggestions with avatars, friends shared by several entered players first. Friends of players whose friends list is private are not suggested.
 3. Click the dice: the application picks a random game among those all players own. Click the dice again to pick another one.
+
+The "Your libraries" diagram draws one ellipse per player; the highlighted middle, where they all overlap, holds the games the dice picks from. Hovering or focusing an ellipse shows whose library it is.
 
 Steam profiles and game lists must be **public**, otherwise a player's games are not found.
 

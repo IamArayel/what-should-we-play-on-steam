@@ -27,7 +27,6 @@
 }
 
 .hero {
-	max-width: 720px;
 	margin: 0;
 	font-family: $font-display;
 	font-weight: 700;
@@ -45,21 +44,39 @@
 }
 
 .columns {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
 	gap: 24px;
-	align-items: flex-start;
+	align-items: start;
+	grid-template-columns: minmax(340px, 400px) minmax(0, 1fr) minmax(280px, 320px);
+	grid-template-areas: "main venn side";
+
+	// The last row takes the height left by the side column, so the diagram stays right under the players
+	@media (max-width: 1100px) {
+		grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+		grid-template-rows: auto 1fr;
+		grid-template-areas: "main side" "venn side";
+	}
+
+	@media (max-width: 760px) {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: none;
+		grid-template-areas: "main" "venn" "side";
+	}
 
 	.column-main {
-		flex: 1.7 1 520px;
+		grid-area: main;
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
 	}
 
+	.venn {
+		grid-area: venn;
+	}
+
 	.column-side {
-		flex: 1 1 300px;
+		grid-area: side;
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
@@ -501,6 +518,104 @@
 
 	.player-field + .player-field .suggestions {
 		top: 48px;
+	}
+}
+
+// Venn
+
+.venn {
+	min-width: 0;
+
+	.venn-body {
+		padding: 20px;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.venn-diagram {
+		width: 100%;
+		max-width: 460px;
+		height: auto;
+		display: block;
+		overflow: visible;
+
+		&.has-hovered .venn-player:not(.hovered) {
+			opacity: .35;
+		}
+	}
+
+	.venn-player {
+		fill-opacity: .16;
+		stroke-width: 2;
+		cursor: pointer;
+		outline: none;
+		transition: opacity .2s, fill-opacity .2s, stroke-width .2s;
+
+		&.hovered {
+			fill-opacity: .32;
+			stroke-width: 4;
+		}
+	}
+
+	.venn-common {
+		fill: var(--accent);
+		pointer-events: none;
+		animation: venn-pulse 2.4s ease-in-out infinite;
+	}
+
+	.venn-count {
+		font: 700 28px $font-display;
+		fill: var(--text);
+		pointer-events: none;
+	}
+
+	.venn-caption {
+		min-height: 36px;
+		margin: 0;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+
+		font-size: 14px;
+		color: var(--muted);
+		text-align: center;
+
+		.avatar {
+			width: 36px;
+			height: 36px;
+			border-radius: 8px;
+		}
+
+		.venn-caption-name {
+			font-weight: 600;
+			color: var(--text);
+		}
+
+		.venn-caption-games {
+			font-family: $font-mono;
+			font-size: 12px;
+		}
+	}
+}
+
+@keyframes venn-pulse {
+	0%, 100% {
+		fill-opacity: .35;
+	}
+	50% {
+		fill-opacity: .75;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.venn .venn-common {
+		animation: none;
+		fill-opacity: .55;
 	}
 }
 
