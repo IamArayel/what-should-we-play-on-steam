@@ -294,7 +294,6 @@
                 </div>
                 <button class="btn-roll"
                         type="button"
-                        title="What should we play?"
                         @click="whatShouldWePlay()"
                         :disabled="loading || getResolvedCount() < 2">
                     <i v-if="!loading"
@@ -303,7 +302,7 @@
                     <i v-if="loading"
                        class="fas fa-spinner fa-spin"
                        aria-hidden="true"></i>
-                    What should we play?
+                    Roll a game
                 </button>
             </section>
 

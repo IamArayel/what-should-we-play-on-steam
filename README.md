@@ -1,4 +1,6 @@
-# What Should We Play On Steam
+# VennPlay
+
+*Venn & Play: overlap your Steam libraries, then play.*
 
 Fork of [Timmy1e/what-should-we-play-on-steam](https://gitlab.com/Timmy1e/what-should-we-play-on-steam), originally created by Tim van Leuverden.
 
