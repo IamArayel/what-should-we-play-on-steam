@@ -6,9 +6,9 @@
     '/dist/fontawesome/css/solid.min.css',
     '/styles/index.css'
 ]; %>
-<% include _partials/head.ejs %>
+<%- include('_partials/head.ejs') %>
 <body>
-<% include _partials/header.ejs %>
+<%- include('_partials/header.ejs') %>
 
 <main id="index"
       class="content">
@@ -386,7 +386,7 @@
     </div>
 </main>
 
-<% include _partials/footer.ejs %>
+<%- include('_partials/footer.ejs') %>
 
 <% locals.scripts = [
     '/dist/vue/vue.min.js',
@@ -394,6 +394,6 @@
     '/dist/axios/axios.min.js',
     '/scripts/index.js'
 ]; %>
-<% include _partials/scripts.ejs %>
+<%- include('_partials/scripts.ejs') %>
 </body>
 </html>

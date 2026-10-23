@@ -6,7 +6,6 @@
 const path = require('path');
 const logger = require('morgan');
 const express = require('express');
-const bodyParser = require('body-parser');
 const vercelConfig = require('./vercel.json');
 
 
@@ -26,8 +25,6 @@ app.use((req, res, next) => {
 
 /// Middleware
 app.use(logger(PROD ? 'tiny' : 'dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 // Built by scripts/build.js; on Vercel the CDN serves public/ before requests reach this app
 app.use(express.static(path.join(__dirname, 'public')));
 
