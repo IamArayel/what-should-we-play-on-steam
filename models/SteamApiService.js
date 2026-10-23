@@ -1,5 +1,3 @@
-const request = require('request-promise');
-
 class SteamApiService {
 	/**
 	 * Constructor
@@ -17,13 +15,15 @@ class SteamApiService {
 	 * @returns {Promise<Object>}
 	 */
 	get(uri) {
-		return request({
-			method: 'GET',
-			uri: uri,
-			json: true
-		})
+		return fetch(uri)
+			.then(response => {
+				if (!response.ok) {
+					throw { status: response.status };
+				}
+				return response.json();
+			})
 			.catch(error => {
-				throw { status: error.statusCode || 500, error: 'Steam API request failed' };
+				throw { status: error.status || 500, error: 'Steam API request failed' };
 			});
 	}
 

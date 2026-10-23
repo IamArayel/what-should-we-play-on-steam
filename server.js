@@ -9,11 +9,6 @@
  * Module dependencies.
  */
 
-// noinspection JSUnresolvedVariable
-//global.debug = debug;
-global.PROD = process.env.NODE_ENV === 'production';
-global.DEV = process.env.NODE_ENV === 'development';
-
 const app = require('./app');
 const http = require('http');
 

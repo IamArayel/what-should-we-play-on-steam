@@ -9,9 +9,9 @@ locals.styles = [
     '/styles/main.css'
 ];
 %>
-<% include _partials/head.ejs %>
+<%- include('_partials/head.ejs') %>
 <body class="error-page">
-<% include _partials/header.ejs %>
+<%- include('_partials/header.ejs') %>
 
 <div class="content">
     <%
@@ -51,7 +51,7 @@ locals.styles = [
         </dl>
     <% } %>
 </div>
-<% include _partials/footer.ejs %>
-<% include _partials/scripts.ejs %>
+<%- include('_partials/footer.ejs') %>
+<%- include('_partials/scripts.ejs') %>
 </body>
 </html>

@@ -6,26 +6,23 @@
 	"repository": "https://github.com/IamArayel/what-should-we-play-on-steam",
 	"author": "Tim van Leuverden <TvanLeuverden@Gmail.com>",
 	"license": "GPLv3",
+	"engines": {
+		"node": "24.x"
+	},
+	"scripts": {
+		"build": "node scripts/build.js",
+		"start": "node server.js"
+	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "5.12.1",
 		"axios": "0.34.0",
-		"babel-plugin-transform-strict-mode": "6.24.1",
-		"babel-preset-env": "1.7.0",
-		"babel-preset-minify": "0.5.1",
-		"body-parser": "1.20.6",
-		"ejs": "2.6.2",
-		"express": "4.16.4",
-		"express-babel": "1.0.2",
-		"express-redis-cache": "1.1.3",
+		"ejs": "3.1.10",
+		"express": "4.22.3",
 		"include-media": "1.4.9",
-		"open-sans-fonts": "1.5.1",
 		"morgan": "1.12.1",
-		"node-sass-middleware": "0.11.0",
-		"vue": "2.6.11",
-		"redis-promisify": "0.1.2",
-		"request": "2.88.2",
-		"request-promise": "4.2.5",
+		"open-sans-fonts": "1.5.1",
 		"q": "1.5.1",
-		"serve-favicon": "2.5.0"
+		"sass": "1.106.1",
+		"vue": "2.6.11"
 	}
 }
