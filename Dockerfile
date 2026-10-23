@@ -1,4 +1,4 @@
-FROM node:13
+FROM node:24
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -14,6 +14,9 @@ ENV NODE_ENV=production
 
 # Install all deps
 RUN npm install
+
+# Build the static site into public/
+RUN npm run build
 
 # Open port for server
 EXPOSE 3000

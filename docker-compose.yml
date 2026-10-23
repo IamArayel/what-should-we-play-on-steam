@@ -3,19 +3,14 @@ services:
   app:
     build: .
     init: true
+    # The source mount hides the public/ built into the image, so it is rebuilt at startup
+    command: sh -c "npm run build && node server.js"
     ports:
       - "3000:3000"
     environment:
       STEAM_KEY: ${STEAM_KEY:?STEAM_KEY is missing, set it in the .env file}
-      REDIS_SERVICE_HOST: redis
-      REDIS_SERVICE_PORT: 6379
       NODE_ENV: development
     volumes:
       - .:/usr/src/app
       # Keeps the image's node_modules, otherwise hidden by the source mount
       - /usr/src/app/node_modules
-    depends_on:
-      - redis
-
-  redis:
-    image: redis:7
