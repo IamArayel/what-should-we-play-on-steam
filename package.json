@@ -15,7 +15,6 @@
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "5.12.1",
-		"@vercel/analytics": "^2.0.1",
 		"axios": "0.34.0",
 		"ejs": "3.1.10",
 		"express": "4.22.3",

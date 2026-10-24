@@ -19,8 +19,7 @@ const VENDORS = {
 	'q/q.js': 'q/q.js',
 	'axios/axios.min.js': 'axios/dist/axios.min.js',
 	'fontawesome/css': '@fortawesome/fontawesome-free/css',
-	'fontawesome/webfonts': '@fortawesome/fontawesome-free/webfonts',
-	'vercel-analytics/index.mjs': '@vercel/analytics/dist/index.mjs'
+	'fontawesome/webfonts': '@fortawesome/fontawesome-free/webfonts'
 };
 
 // Published page -> view and the locals it expects
