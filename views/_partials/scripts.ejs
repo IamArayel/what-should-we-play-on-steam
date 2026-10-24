@@ -2,3 +2,5 @@
 <% if (locals.scripts && Array.isArray(locals.scripts)) { locals.scripts.forEach((script) => { %>
 <script src="<%- script %>"></script>
 <% }); } %>
+<%# Served by Vercel once Web Analytics is enabled; 404s harmlessly elsewhere %>
+<script defer src="/_vercel/insights/script.js"></script>
